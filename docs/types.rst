@@ -5,18 +5,14 @@
 Types
 #####
 
-Vyper is a statically typed language, which means that the type of each
-variable (state and local) needs to be specified or at least known at
-compile-time. Vyper provides several elementary types which can be combined
-to form complex types.
+Vyper is a statically typed language. The type of each variable (state and local) must be specified or at least known at compile-time. Vyper provides several elementary types which can be combined to form complex types.
 
-In addition, types can interact with each other in expressions containing
-operators.
+In addition, types can interact with each other in expressions containing operators.
 
 .. index:: ! value
 
 Value Types
-***********
+===========
 
 The following types are also called value types because variables of these
 types will always be passed by value, i.e. they are always copied when they
@@ -25,19 +21,19 @@ are used as function arguments or in assignments.
 .. index:: ! bool, ! true, ! false
 
 Boolean
-=======
+-------
 
 **Keyword:** ``bool``
 
 A boolean is a type to store a logical/truth value.
 
 Values
-------
+******
 
 The only possible values are the constants ``True`` and ``False``.
 
 Operators
----------
+*********
 
 ====================  ===================
 Operator              Description
@@ -55,19 +51,21 @@ the behavior of Python.
 .. index:: ! int128, ! int, ! integer
 
 Signed Integer (128 bit)
-========================
+------------------------
 
 **Keyword:** ``int128``
 
 A signed integer (128 bit) is a type to store positive and negative integers.
 
 Values
-------
+******
 
 Signed integer values between -2\ :sup:`127` and (2\ :sup:`127` - 1), inclusive.
 
+Interger literals cannot have a decimal point even if the decimal value is zero. For example, ``2.0`` cannot be interpreted as an integer.
+
 Operators
----------
+*********
 
 Comparisons
 ^^^^^^^^^^^
@@ -100,8 +98,6 @@ Operator       Description
 ``x / y``      Division
 ``x**y``       Exponentiation
 ``x % y``      Modulo
-``min(x, y)``  Minimum
-``max(x, y)``  Maximum
 =============  ======================
 
 ``x`` and ``y`` must be of the type ``int128``.
@@ -109,22 +105,24 @@ Operator       Description
 .. index:: ! unit, ! uint256
 
 Unsigned Integer (256 bit)
-==========================
+--------------------------
 
 **Keyword:** ``uint256``
 
 An unsigned integer (256 bit) is a type to store non-negative integers.
 
 Values
-------
+******
 
 Integer values between 0 and (2\ :sup:`256`-1).
+
+Interger literals cannot have a decimal point even if the decimal value is zero. For example, ``2.0`` cannot be interpreted as an integer.
 
 .. note::
     Integer literals are interpreted as ``int128`` by default. In cases where ``uint256`` is more appropriate, such as assignment, the literal might be interpreted as ``uint256``. Example: ``_variable: uint256 = _literal``. In order to explicitly cast a literal to a ``uint256`` use ``convert(_literal, uint256)``.
 
 Operators
----------
+*********
 
 Comparisons
 ^^^^^^^^^^^
@@ -152,51 +150,30 @@ Operator                     Description
 ===========================  ======================
 ``x + y``                    Addition
 ``x - y``                    Subtraction
-``uint256_addmod(x, y, z)``  Addition modulo ``z``
 ``x * y``                    Multiplication
-``uint256_mulmod(x, y, z)``  Multiplication modulo ``z``
 ``x / y``                    Division
 ``x**y``                     Exponentiation
 ``x % y``                    Modulo
-``min(x, y)``                Minimum
-``max(x, y)``                Maximum
 ===========================  ======================
 
 ``x``, ``y`` and ``z`` must be of the type ``uint256``.
 
-Bitwise Operators
-^^^^^^^^^^^^^^^^^
-
-===================== =============
-Operator              Description
-===================== =============
-``bitwise_and(x, y)`` AND
-``bitwise_or(x, y)``  OR
-``bitwise_xor(x, y)`` XOR
-``bitwise_not(x)``    NOT
-``shift(x, _shift)``  Bitwise Shift
-===================== =============
-
-``x`` and ``y`` must be of the type ``uint256``. ``_shift`` must be of the type ``int128``.
-
-.. note::
-    Positive ``_shift`` equals a left shift; negative ``_shift`` equals a right shift.
-    Values shifted above/below the most/least significant bit get discarded.
-
 Decimals
-========
+--------
 
 **Keyword:** ``decimal``
 
 A decimal is a type to store a decimal fixed point value.
 
 Values
-------
+******
 
 A value with a precision of 10 decimal places between -2\ :sup:`127` and (2\ :sup:`127` - 1).
 
+In order for a literal to be interpreted as ``decimal`` it must include a decimal point.
+
 Operators
----------
+*********
 
 Comparisons
 ^^^^^^^^^^^
@@ -228,10 +205,6 @@ Operator       Description
 ``x * y``      Multiplication
 ``x / y``      Division
 ``x % y``      Modulo
-``min(x, y)``  Minimum
-``max(x, y)``  Maximum
-``floor(x)``   Largest integer <= ``x``. Returns ``int128``.
-``ceil(x)``    Smallest integer >= ``x``. Returns ``int128``.
 =============  ==========================================
 
 ``x`` and ``y`` must be of the type ``decimal``.
@@ -239,16 +212,16 @@ Operator       Description
 .. _address:
 
 Address
-=======
+-------
 
 **Keyword:** ``address``
 
 The address type holds an Ethereum address.
 
 Values
-------
+******
 
-An address type can hold an Ethereum address which equates to 20 bytes or 160 bits. It returns in hexadecimal notation with a leading ``0x``.
+An address type can hold an Ethereum address which equates to 20 bytes or 160 bits. Address literals must be written in hexadecimal notation with a leading ``0x``. All addresses must be `checksummed <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md>`_.
 
 .. _members-of-addresses:
 
@@ -270,9 +243,8 @@ Syntax as follows: ``_address.<member>``, where ``_address`` is of the type ``ad
 
     Operations such as ``SELFDESTRUCT`` and ``CREATE2`` allow for the removal and replacement of bytecode at an address. You should never assume that values of address members will not change in the future.
 
-
 32-bit-wide Byte Array
-======================
+----------------------
 
 **Keyword:** ``bytes32``
 This is a 32-bit-wide byte array that is otherwise similar to byte arrays.
@@ -286,7 +258,7 @@ This is a 32-bit-wide byte array that is otherwise similar to byte arrays.
     self.hash = _hash
 
 Operators
----------
+*********
 
 ====================================  ============================================================
 Keyword                               Description
@@ -301,7 +273,7 @@ Where ``x`` is a byte array and ``_start`` as well as ``_len`` are integer value
 .. index:: !bytes
 
 Fixed-size Byte Arrays
-======================
+----------------------
 
 **Keyword:** ``Bytes``
 
@@ -309,44 +281,31 @@ A byte array with a fixed size.
 The syntax being ``Bytes[maxLen]``, where ``maxLen`` is an integer which denotes the maximum number of bytes.
 On the ABI level the Fixed-size bytes array is annotated as ``bytes``.
 
-**Example:**
-::
+Bytes literals may be given as bytes strings, hexadecimal, or binary.
 
-    example_bytes: Bytes[100] = b"\x01\x02\x03"
+.. code-block:: python
+
+    bytes_string: Bytes[100] = b"\x01"
+    hex_bytes: Bytes[100] = 0x01
+    binary_bytes: Bytes[100] = 0b00000001
 
 .. index:: !string
 
 Fixed-size Strings
-==================
+------------------
 
 **Keyword:** ``String``
 Fixed-size strings can hold strings with equal or fewer characters than the maximum length of the string.
 On the ABI level the Fixed-size bytes array is annotated as ``string``.
 
-**Example:**
-::
+.. code-block:: python
 
     example_str: String[100] = "Test String"
-
-Operators
----------
-
-====================================  ============================================================
-Keyword                               Description
-====================================  ============================================================
-``len(x)``                            Return the length as an integer.
-``keccak256(x)``                      Return the keccak256 hash as bytes32.
-``concat(x, ...)``                    Concatenate multiple inputs.
-``slice(x, start=_start, len=_len)``  Return a slice of ``_len`` starting at ``_start``.
-====================================  ============================================================
-
-Where ``x`` is a byte array or string while ``_start`` and ``_len`` are integers.
-The ``len``, ``keccak256``, ``concat``, ``slice`` operators can be used with ``String`` and ``Bytes`` types.
 
 .. index:: !reference
 
 Reference Types
-***************
+===============
 
 Reference types do not fit into 32 bytes. Because of this, copying their value is not as feasible as
 with value types. Therefore only the location, i.e. the reference, of the data is passed.
@@ -354,100 +313,101 @@ with value types. Therefore only the location, i.e. the reference, of the data i
 .. index:: !arrays
 
 Fixed-size Lists
-================
+----------------
 
 Fixed-size lists hold a finite number of elements which belong to a specified type.
 
 Syntax
-------
+******
 
 Lists can be declared with ``_name: _ValueType[_Integer]``. Multidimensional lists are also possible.
 
-**Example:**
-::
+.. code-block:: python
 
-  #Defining a list
-  exampleList: int128[3]
-  #Setting values
-  exampleList = [10, 11, 12]
-  exampleList[2] = 42
-  #Returning a value
-  return exampleList[0]
+    # Defining a list
+    exampleList: int128[3]
 
-.. index:: !structs
+    # Setting values
+    exampleList = [10, 11, 12]
+    exampleList[2] = 42
+
+    # Returning a value
+    return exampleList[0]
+
+.. _types-struct:
 
 Structs
-=======
+-------
 
 Structs are custom defined types that can group several variables.
 
 Syntax
-------
+******
 
-Structs can be accessed via ``struct.argname``.
-**Example:**
-::
+Struct members can be accessed via ``struct.argname``.
 
-  #Defining a struct
-  struct MyStruct:
-      value1: int128
-      value2: decimal
-  exampleStruct: MyStruct
-  #Constructing a struct
-  exampleStruct = MyStruct({value1: 1, value2: 2})
-  #Accessing a value
-  exampleStruct.value1 = 1
+.. code-block::
+
+    # Defining a struct
+    struct MyStruct:
+        value1: int128
+        value2: decimal
+
+    # Declaring a struct variable
+    exampleStruct: MyStruct = MyStruct({value1: 1, value2: 2})
+
+    # Accessing a value
+    exampleStruct.value1 = 1
 
 
 .. index:: !mapping
 
 Mappings
-========
+--------
 
-Mappings in Vyper can be seen as `hash tables <https://en.wikipedia.org/wiki/Hash_table>`_ which are virtually initialized such that
-every possible key exists and is mapped to a value whose byte-representation is
-all zeros: a type's default value. The similarity ends here, though: The key data is not actually stored
-in a mapping, only its ``keccak256`` hash used to look up the value. Because of this, mappings
-do not have a length or a concept of a key or value being "set".
+Mappings are `hash tables <https://en.wikipedia.org/wiki/Hash_table>`_ that are virtually initialized such that every possible key exists and is mapped to a value whose byte-representation is all zeros: a type's :ref:`default value <types-initial>`.
 
-It is possible to mark mappings ``public`` and have Vyper create a getter.
-The ``_KeyType`` will become a required parameter for the getter and it will
-return ``_ValueType``.
+The key data is not stored in a mapping, instead its ``keccak256`` hash used to look up a value. For this reason mappings do not have a length or a concept of a key or value being "set".
 
 .. note::
     Mappings are only allowed as state variables.
 
 Syntax
-------
+******
 
 Mapping types are declared as ``HashMap[_KeyType, _ValueType]``.
-Here ``_KeyType`` can be any base or bytes type. Mappings, interfaces or structs are not support as key types.
-``_ValueType`` can actually be any type, including mappings.
 
-**Example:**
-::
+* ``_KeyType`` can be any base or bytes type. Mappings, interfaces or structs are not support as key types.
+* ``_ValueType`` can actually be any type, including mappings.
 
-   #Defining a mapping
+
+.. code-block:: python
+
+   # Defining a mapping
    exampleMapping: HashMap[int128, decimal]
-   #Accessing a value
+
+   # Accessing a value
    exampleMapping[0] = 10.1
 
+
 .. note::
-    Mappings can only be accessed, not iterated over.
+
+    Mappings have no concept of length and so cannot be iterated over.
 
 .. index:: !initial
 
 .. _types-initial:
 
 Initial Values
-**************
+==============
 
-In Vyper, there is no ``null`` option like most programming languages have. Thus, every variable type has a default value. In order to check if a variable is empty, you will need to compare it to its type's default value.
-If you would like to reset a variable to its type's default value, assign to it the built-in ``empty()`` function which constructs a zero value for that type.
+Unlike most programming languages, Vyper does not have a concept of ``null``. Instead, every variable type has a default value. To check if a variable is empty, you must compare it to the default value for it's given type.
+
+To reset a variable to it's default value, assign to it the built-in ``empty()`` function which constructs a zero value for that type.
 
 .. note::
 
-    Memory variables must be assigned a value at the time they are declared. :ref:`types-constants` may be used to initialize memory variables with their default values.
+    Memory variables must be assigned a value at the time they are declared.
 
 Here you can find a list of all types and default values:
 
@@ -479,7 +439,7 @@ Here you can find a list of all types and default values:
 .. _type_conversions:
 
 Type Conversions
-****************
+================
 
 All type conversions in Vyper must be made explicitly using the built-in ``convert(a, b)`` function. Currently, the following type conversions are supported:
 
